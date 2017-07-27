@@ -31,7 +31,7 @@ if [ ! -d "$clonedir" ]; then
   git clone https://github.com/lede-project/source $clonedir
 fi
 
-if [ "$firstbuild" -eq "0" ]; then
+if [ "$1" -eq "clean" ]; then
   Msg "Cleaning Builddir..."
   cd $clonedir
   rm -rf ./bin
@@ -49,7 +49,7 @@ if [ `rsync -avzr --log-format=%f ./overlay/* $clonedir/ | wc -l` -gt "4" ] || [
 fi
 
 
-if [ -f "../config/diffconfig" ]; then
+if [ -f "./config/diffconfig" ]; then
   Msg "Applying and Expanding config..."
   cd $clonedir
   cp ../config/diffconfig ./.config
