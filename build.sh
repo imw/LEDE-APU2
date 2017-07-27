@@ -16,6 +16,13 @@ else
   modify=0
 fi
 
+# Do we want to build at present?
+if [ "$1" = "build" ]; then
+  build=1
+else
+  build=0
+fi
+
 Msg "Starting Build Process!"
 
 if [ ! -d "$clonedir" ]; then
@@ -33,18 +40,20 @@ if [ "$firstbuild" -eq "0" ]; then
 fi
 
 Msg "Applying overlay..."
-cp -R ./overlay/* $clonedir/
-
-if [ "$firstbuild" -eq "1" ]; then
+if [ `rsync -avzr --log-format=%f ./overlay/* $clonedir/ | wc -l` -gt "4" ] || [ "$firstbuild" -eq "1" ]; then
   Msg "Installing feeds..."
   cd $clonedir
   ./scripts/feeds update -a
   ./scripts/feeds install -a
-  if [ -f "../config/diffconfig" ]; then
-  	Msg "Applying and Expanding config..."
-  	cp ../config/diffconfig ./.config
-  	make defconfig
-  fi
+  cd - > /dev/null
+fi
+
+
+if [ -f "../config/diffconfig" ]; then
+  Msg "Applying and Expanding config..."
+  cd $clonedir
+  cp ../config/diffconfig ./.config
+  make defconfig
   cd - > /dev/null
 fi
 
@@ -55,17 +64,19 @@ if [ "$modify" -eq "1" ]; then
   cd - > /dev/null
 fi
 
-Msg "Building Time!!!"
-cd $clonedir
-make -j$cpu_num V=s
+if [ "$build" -eq "1" ]; then
+  Msg "Building Time!!!"
+  cd $clonedir
+  make -j$cpu_num V=s
 
-if [ $? -ne 0 ]; then
-  cd - > /dev/null
-  Msg "Build Failed!"
-  exit 1
-else
-  cd - > /dev/null
-  Msg "Compile Complete!"
+  if [ $? -ne 0 ]; then
+    cd - > /dev/null
+    Msg "Build Failed!"
+    exit 1
+  else
+    cd - > /dev/null
+    Msg "Compile Complete!"
+  fi
 fi
 
 Msg "Build.sh Finished!"
