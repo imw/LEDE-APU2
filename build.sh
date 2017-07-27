@@ -17,7 +17,7 @@ else
 fi
 
 # Do we want to build at present?
-if [ "$1" = "build" ]; then
+if [ "$1" = "go" ]; then
   build=1
 else
   build=0

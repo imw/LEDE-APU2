@@ -6,8 +6,14 @@ Currently based on LEDE Nightlies. Note that all major code has been merged upst
 
 Building
 -----
-#### Build Only
+#### Prepare BR Only
 `./build.sh`
 
-#### Modify Configs and Build
+#### Modify Configs
 `./build.sh modify`
+
+#### Clean BR
+`./build.sh clean`
+
+#### Build
+`./build.sh go`
