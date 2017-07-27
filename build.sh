@@ -31,7 +31,7 @@ if [ ! -d "$clonedir" ]; then
   git clone https://github.com/lede-project/source $clonedir
 fi
 
-if [ "$1" -eq "clean" ]; then
+if [ "$1" = "clean" ]; then
   Msg "Cleaning Builddir..."
   cd $clonedir
   rm -rf ./bin
